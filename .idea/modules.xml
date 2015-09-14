@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KoLibrayry.iml" filepath="$PROJECT_DIR$/KoLibrayry.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kocore/kocore.iml" filepath="$PROJECT_DIR$/kocore/kocore.iml" />
       <module fileurl="file://$PROJECT_DIR$/kohttp/kohttp.iml" filepath="$PROJECT_DIR$/kohttp/kohttp.iml" />
     </modules>
   </component>

@@ -1,1 +1,1 @@
-include ':kohttp'
+include ':kohttp' , ':kocore'
