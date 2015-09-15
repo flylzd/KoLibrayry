@@ -4,13 +4,14 @@ package com.lizeda.kohttp.callback;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.lizeda.kohttp.progress.ProgressListener;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-public abstract class ResponseCallback implements Callback {
+public abstract class ResponseCallback implements Callback, ProgressListener {
 
 //    protected static final int SUCCESS_MESSAGE = 0;
 //    protected static final int FAILURE_MESSAGE = 1;
@@ -27,6 +28,10 @@ public abstract class ResponseCallback implements Callback {
     @Override
     public void onResponse(Response response) throws IOException {
 
+    }
+
+    @Override
+    public void onProgress(long currentBytes, long contentLength, boolean done) {
     }
 
     public void onStart() {

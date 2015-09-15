@@ -58,7 +58,7 @@ public class BodyPart {
         return contentType;
     }
 
-    public RequestBody getBody() throws IOException {
+    public RequestBody getBody() {
         return body;
     }
 

@@ -340,7 +340,7 @@ public class KORequest {
 //        this.debug = source.debug;
     }
 
-    protected RequestBody getRequestBody() throws IOException {
+    protected RequestBody getRequestBody()  {
         if (!supportBody()) {
             return null;
         }

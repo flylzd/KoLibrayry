@@ -1,6 +1,7 @@
 package com.lizeda.kohttp;
 
 import com.lizeda.kohttp.callback.ResponseCallback;
+import com.lizeda.kohttp.progress.ProgressInterceptor;
 import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
@@ -191,7 +192,7 @@ public class KOHttpClient {
     }
 
     public void head(final String url, final Map<String, String> queries, final ResponseCallback responseCallback,
-                     final Object tag) throws IOException {
+                     final Object tag) {
         head(url, queries, null, responseCallback, tag);
     }
 
@@ -199,17 +200,17 @@ public class KOHttpClient {
                      final Map<String, String> queries,
                      final Map<String, String> headers,
                      final ResponseCallback responseCallback,
-                     final Object tag) throws IOException {
+                     final Object tag) {
         request(HttpMethod.HEAD, url, queries, null, headers, responseCallback, tag);
     }
 
     public void get(final String url, final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         get(url, null, null, responseCallback, tag);
     }
 
     public void get(final String url, final Map<String, String> queries, final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         get(url, queries, null, responseCallback, tag);
     }
 
@@ -217,7 +218,7 @@ public class KOHttpClient {
                     final Map<String, String> queries,
                     final Map<String, String> headers,
                     final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         request(HttpMethod.GET, url, queries, null, headers, responseCallback, tag);
     }
 
@@ -225,7 +226,7 @@ public class KOHttpClient {
     public void post(final String url,
                      final Map<String, String> params,
                      final ResponseCallback responseCallback,
-                     final Object tag) throws IOException {
+                     final Object tag) {
         post(url, params, null, responseCallback, tag);
     }
 
@@ -233,13 +234,13 @@ public class KOHttpClient {
                      final Map<String, String> params,
                      final Map<String, String> headers,
                      final ResponseCallback responseCallback,
-                     final Object tag) throws IOException {
+                     final Object tag) {
         request(HttpMethod.POST, url, null, params, headers, responseCallback, tag);
     }
 
 
     public void put(final String url, final Map<String, String> params, final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         put(url, params, null, responseCallback, tag);
     }
 
@@ -247,19 +248,19 @@ public class KOHttpClient {
                     final Map<String, String> params,
                     final Map<String, String> headers,
                     final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         request(HttpMethod.PUT, url, null, params, headers, responseCallback, tag);
     }
 
     // put params into url queries
     public void delete(final String url, final ResponseCallback responseCallback,
-                       final Object tag) throws IOException {
+                       final Object tag) {
         deleteByQueryParams(url, null, null, responseCallback, tag);
     }
 
     // put params into url queries
     public void deleteByQueryParams(final String url, final Map<String, String> queries, final ResponseCallback responseCallback,
-                                    final Object tag) throws IOException {
+                                    final Object tag) {
         deleteByQueryParams(url, queries, null, responseCallback, tag);
     }
 
@@ -268,13 +269,13 @@ public class KOHttpClient {
                                     final Map<String, String> queries,
                                     final Map<String, String> headers,
                                     final ResponseCallback responseCallback,
-                                    final Object tag) throws IOException {
+                                    final Object tag) {
         request(HttpMethod.DELETE, url, queries, null, headers, responseCallback, tag);
     }
 
     // put params into  http request body
     public void deleteByBodyParams(final String url, final Map<String, String> params, final ResponseCallback responseCallback,
-                                   final Object tag) throws IOException {
+                                   final Object tag) {
         deleteByBodyParams(url, params, null, responseCallback, tag);
     }
 
@@ -283,30 +284,31 @@ public class KOHttpClient {
                                    final Map<String, String> params,
                                    final Map<String, String> headers,
                                    final ResponseCallback responseCallback,
-                                   final Object tag) throws IOException {
+                                   final Object tag) {
         request(HttpMethod.DELETE, url, null, params, headers, responseCallback, tag);
     }
 
 
     public void get(final String url, final RequestParams params, final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         request(HttpMethod.GET, url, params, responseCallback, tag);
     }
 
     public void delete(final String url, final RequestParams params, final ResponseCallback responseCallback,
-                       final Object tag) throws IOException {
+                       final Object tag) {
         request(HttpMethod.DELETE, url, params, responseCallback, tag);
     }
 
     public void post(final String url, final RequestParams params, final ResponseCallback responseCallback,
-                     final Object tag) throws IOException {
+                     final Object tag) {
         request(HttpMethod.POST, url, params, responseCallback, tag);
     }
 
     public void put(final String url, final RequestParams params, final ResponseCallback responseCallback,
-                    final Object tag) throws IOException {
+                    final Object tag) {
         request(HttpMethod.PUT, url, params, responseCallback, tag);
     }
+
 
     public void request(final HttpMethod method, final String url,
                         final Map<String, String> queries,
@@ -314,7 +316,7 @@ public class KOHttpClient {
                         final Map<String, String> headers,
                         final ResponseCallback responseCallback,
                         final Object tag
-    ) throws IOException {
+    ) {
         callRequest(createRequest(method, url,
                 queries, forms, headers, tag), responseCallback);
     }
@@ -322,13 +324,15 @@ public class KOHttpClient {
     public void request(final HttpMethod method, final String url,
                         final RequestParams requestParams,
                         final ResponseCallback responseCallback,
-                        final Object tag) throws IOException {
+                        final Object tag) {
         callRequest(createRequest(method, url, requestParams, tag), responseCallback);
     }
 
-    protected void callRequest(final KORequest xRequest, final ResponseCallback responseCallback) throws IOException {
+    protected void callRequest(final KORequest xRequest, final ResponseCallback responseCallback) {
 
-        final Request request = createOkRequest(xRequest);
+        final Request request;
+        request = createOkRequest(xRequest);
+
         final OkHttpClient client = mClient.clone();
 
 //        System.out.println("");
@@ -337,6 +341,8 @@ public class KOHttpClient {
             // intercept for logging
             client.networkInterceptors().add(new LoggingInterceptor());
         }
+
+        client.networkInterceptors().add(new ProgressInterceptor(responseCallback));
         // intercept for progress callback
 //        if (xRequest.listener() != null) {
 //            client.interceptors().add(new ProgressInterceptor(nr.listener()));
@@ -368,7 +374,7 @@ public class KOHttpClient {
         return request.headers(headers).queries(queries);
     }
 
-    protected Request createOkRequest(final KORequest request) throws IOException {
+    protected Request createOkRequest(final KORequest request) {
         return new Request.Builder()
                 .url(request.url())
                 .headers(Headers.of(request.headers()))
