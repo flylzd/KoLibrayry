@@ -2,7 +2,6 @@ package com.lizeda.kohttp;
 
 import com.lizeda.kohttp.callback.ResponseCallback;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -52,7 +51,9 @@ public class KOHttpClientManager {
         KOHttpClient.getDefault().get(url, requestParams, responseCallback, tag);
     }
 
-
+    public static void upload(Object tag, String url, RequestParams requestParams, ResponseCallback responseCallback) {
+        KOHttpClient.getDefault().post(url, requestParams, responseCallback, tag);
+    }
 
     public static void cancel(Object tag) {
         KOHttpClient.getDefault().cancel(tag);

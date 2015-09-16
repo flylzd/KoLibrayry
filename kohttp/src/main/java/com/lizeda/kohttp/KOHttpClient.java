@@ -2,6 +2,7 @@ package com.lizeda.kohttp;
 
 import com.lizeda.kohttp.callback.ResponseCallback;
 import com.lizeda.kohttp.progress.ProgressInterceptor;
+import com.lizeda.kohttp.progress.ProgressRequestBody;
 import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
@@ -331,12 +332,10 @@ public class KOHttpClient {
     protected void callRequest(final KORequest xRequest, final ResponseCallback responseCallback) {
 
         final Request request;
-        request = createOkRequest(xRequest);
+        request = createOkRequest(xRequest, responseCallback);
 
         final OkHttpClient client = mClient.clone();
 
-//        System.out.println("");
-        Logger.d("isDebug == " + isDebug);
         if (isDebug) {
             // intercept for logging
             client.networkInterceptors().add(new LoggingInterceptor());
@@ -374,13 +373,24 @@ public class KOHttpClient {
         return request.headers(headers).queries(queries);
     }
 
-    protected Request createOkRequest(final KORequest request) {
-        return new Request.Builder()
+    protected Request createOkRequest(final KORequest request, final ResponseCallback responseCallback) {
+        Request.Builder builder = new Request.Builder();
+        builder.tag(request.getTag())
                 .url(request.url())
-                .headers(Headers.of(request.headers()))
-                .method(request.method().name(), request.getRequestBody())
-                .tag(request.getTag())
-                .build();
+                .headers(Headers.of(request.headers()));
+        if (request.hasParts()) {
+            builder.method(request.method().name(), new ProgressRequestBody(request.getRequestBody(), responseCallback));
+        } else {
+            builder.method(request.method().name(), request.getRequestBody());
+        }
+        return builder.build();
+
+//        return new Request.Builder()
+//                .url(request.url())
+//                .headers(Headers.of(request.headers()))
+//                .method(request.method().name(), request.getRequestBody())
+//                .tag(request.getTag())
+//                .build();
     }
 
 }
