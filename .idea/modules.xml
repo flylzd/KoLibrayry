@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/KoLibrayry.iml" filepath="$PROJECT_DIR$/KoLibrayry.iml" />
       <module fileurl="file://$PROJECT_DIR$/kocore/kocore.iml" filepath="$PROJECT_DIR$/kocore/kocore.iml" />
       <module fileurl="file://$PROJECT_DIR$/kohttp/kohttp.iml" filepath="$PROJECT_DIR$/kohttp/kohttp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kowidget/kowidget.iml" filepath="$PROJECT_DIR$/kowidget/kowidget.iml" />
     </modules>
   </component>
 </project>

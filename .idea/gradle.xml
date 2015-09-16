@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/kocore" />
             <option value="$PROJECT_DIR$/kohttp" />
+            <option value="$PROJECT_DIR$/kowidget" />
           </set>
         </option>
       </GradleProjectSettings>
